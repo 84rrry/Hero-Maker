@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'Model/habbit.dart';
 import 'Screens/HomePage.dart';
 void main() async {
+  
   WidgetsFlutterBinding.ensureInitialized();
   AwesomeNotifications().initialize(
       'resource://drawable/icon_notification',

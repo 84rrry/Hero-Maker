@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+//The Theme used for the app
 ThemeData LightAppTheme() => ThemeData(
       primaryColor: Colors.grey[900],
       dividerColor: Colors.white,
@@ -24,12 +24,6 @@ ThemeData LightAppTheme() => ThemeData(
           fontSize: 20,
         ),
       ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Colors.black,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.white,
-          selectedIconTheme: IconThemeData(size: 15),
-          unselectedItemColor: Colors.blueGrey),
 
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: Colors.white24,

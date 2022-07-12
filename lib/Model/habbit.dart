@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 part 'habbit.g.dart';
 @HiveType(typeId: 0) 
+//Habbit Class 
 class Habbit extends HiveObject{
 
   @HiveField(0)

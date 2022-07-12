@@ -9,8 +9,6 @@ import 'package:habbits_tracker/Services/NotificationServices.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-// import '../Services/NotificationServices.dart';
-
 class HabbitTile extends StatefulWidget {
   final Habbit habbit;
 
@@ -30,11 +28,14 @@ class _HabbitTileState extends State<HabbitTile> {
   TextEditingController habbitNameController = TextEditingController();
   TextEditingController timeGoalController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+//A function to save habbit info
   void saveHabbit(Habbit habbit) {
     debugPrint('Save habbit called');
     habbit.save();
   }
 
+//A function to reset habbit info
   void resetHabbit(Habbit habbit) {
     habbit.timespent = 0;
     habbit.habbitStarted = false;
@@ -42,6 +43,7 @@ class _HabbitTileState extends State<HabbitTile> {
     habbit.save();
   }
 
+//A function called when a habbit is completed
   void doneHabbit(Habbit habbit) {
     debugPrint("done habit called");
     debugPrint(habbit.habbitCompleted.toString());
@@ -51,6 +53,7 @@ class _HabbitTileState extends State<HabbitTile> {
     debugPrint(habbit.habbitCompleted.toString());
   }
 
+//َ A function to edit habbit info 
   void editHabbit(
     Habbit habbit,
     String name,
@@ -63,17 +66,13 @@ class _HabbitTileState extends State<HabbitTile> {
     habbit.save();
   }
 
+//A function to delete a habbit
   void deleteHabbit(Habbit habbit) {
     habbit.delete();
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  String convSecToMin(int totalSec) {
+//A function converting secendes to minutes 
+ String convSecToMin(int totalSec) {
     String sec = (totalSec % 60).toString();
     String min = (totalSec / 60).toStringAsFixed(5);
     if (sec.length == 1) sec = '0' + sec;
@@ -81,6 +80,7 @@ class _HabbitTileState extends State<HabbitTile> {
     return min + ':' + sec;
   }
 
+//A function to show different colors according to the habbit progress 
   Color progressColor() {
     if (widget.habbit.timespent / (widget.habbit.timeGoal * 60) < 0.4)
       return Colors.red;
@@ -103,14 +103,26 @@ class _HabbitTileState extends State<HabbitTile> {
       return Colors.green;
   }
 
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+ 
+
   Widget build(BuildContext context) {
+    //Fitching the device screen Width 
     final WIDTH = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 18),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10.0),
+        //Slidable to achieve slidable actions over the list tile 
         child: Slidable(
           key: widget.key,
+          //Deleting Action (left to right)
           startActionPane: ActionPane(
             motion: const DrawerMotion(),
             extentRatio: 0.3,
@@ -177,6 +189,7 @@ class _HabbitTileState extends State<HabbitTile> {
               ),
             ],
           ),
+          //Edit action (Right to left)
           endActionPane: ActionPane(
             motion: const DrawerMotion(),
             extentRatio: 0.3,
@@ -356,59 +369,62 @@ class _HabbitTileState extends State<HabbitTile> {
               filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
               child: ListTile(
                 key: widget.key,
+                //Play button on tap function 
                 onTap: () {
-        if(!widget.habbit.habbitCompleted) {         DateTime startTime = DateTime.now();
-                  int elapsedTime = widget.habbit.timespent;
-                  setState(() {
-                    widget.habbit.habbitStarted = !widget.habbit.habbitStarted;
-                  });
-                  widget.habbit.habbitStarted
-                      ? (widget.habbit.timespent == 0
-                          ? Fluttertoast.showToast(
-                              msg:
-                                  '${widget.habbit.habbitName} has been Started', // message
-                              toastLength: Toast.LENGTH_SHORT, // length
-                              gravity: ToastGravity.BOTTOM, // location
-                              timeInSecForIosWeb: 1,
-                            )
-                          : Fluttertoast.showToast(
-                              msg:
-                                  '${widget.habbit.habbitName} has been resumed', // message
-                              toastLength: Toast.LENGTH_SHORT, // length
-                              gravity: ToastGravity.BOTTOM, // location
-                              timeInSecForIosWeb: 1,
-                            ))
-                      : Fluttertoast.showToast(
-                          msg:
-                              ' ${widget.habbit.habbitName} has been Stoped', // message
-                          toastLength: Toast.LENGTH_SHORT, // length
-                          gravity: ToastGravity.BOTTOM, // location
-                          timeInSecForIosWeb: 1,
-                        );
-                  if (widget.habbit.habbitStarted) {
-          
-                    Timer.periodic(const Duration(seconds: 0), (timer) {
-                      setState(() {
-                        if (!widget.habbit.habbitStarted ||
-                            (widget.habbit.timespent /
-                                    (widget.habbit.timeGoal * 60)) ==
-                                1) {
-                          timer.cancel();
-                          widget.habbit.habbitStarted = false;
-                       
-                        }
-
-                        var currenTime = DateTime.now();
-
-                        widget.habbit.timespent = elapsedTime +
-                            currenTime.second -
-                            startTime.second +
-                            60 * (currenTime.minute - startTime.minute) +
-                            3600 * (currenTime.hour - startTime.hour);
-                      });
+                  if (!widget.habbit.habbitCompleted) {
+                    DateTime startTime = DateTime.now();
+                    int elapsedTime = widget.habbit.timespent;
+                    setState(() {
+                      widget.habbit.habbitStarted =
+                          !widget.habbit.habbitStarted;
                     });
+                    widget.habbit.habbitStarted
+                        ? (widget.habbit.timespent == 0
+                            ? Fluttertoast.showToast(
+                                msg:
+                                    '${widget.habbit.habbitName} has been Started', // message
+                                toastLength: Toast.LENGTH_SHORT, // length
+                                gravity: ToastGravity.BOTTOM, // location
+                                timeInSecForIosWeb: 1,
+                              )
+                            : Fluttertoast.showToast(
+                                msg:
+                                    '${widget.habbit.habbitName} has been resumed', // message
+                                toastLength: Toast.LENGTH_SHORT, // length
+                                gravity: ToastGravity.BOTTOM, // location
+                                timeInSecForIosWeb: 1,
+                              ))
+                        : Fluttertoast.showToast(
+                            msg:
+                                ' ${widget.habbit.habbitName} has been Stoped', // message
+                            toastLength: Toast.LENGTH_SHORT, // length
+                            gravity: ToastGravity.BOTTOM, // location
+                            timeInSecForIosWeb: 1,
+                          );
+                    if (widget.habbit.habbitStarted) {
+                      Timer.periodic(const Duration(seconds: 0), (timer) {
+                        setState(() {
+                          if (!widget.habbit.habbitStarted ||
+                              (widget.habbit.timespent /
+                                      (widget.habbit.timeGoal * 60)) ==
+                                  1) {
+                            timer.cancel();
+                            widget.habbit.habbitStarted = false;
+                          }
+
+                          var currenTime = DateTime.now();
+
+                          widget.habbit.timespent = elapsedTime +
+                              currenTime.second -
+                              startTime.second +
+                              60 * (currenTime.minute - startTime.minute) +
+                              3600 * (currenTime.hour - startTime.hour);
+                        });
+                      });
+                    }
                   }
-                };},
+                  ;
+                },
                 title: Text(
                   widget.habbit.habbitName,
                   style: Theme.of(context)
@@ -416,6 +432,7 @@ class _HabbitTileState extends State<HabbitTile> {
                       .bodyText1
                       ?.copyWith(fontSize: WIDTH * 0.045),
                 ),
+                //progress text
                 subtitle: Text(
                   "${convSecToMin(widget.habbit.timespent)}/${widget.habbit.timeGoal}= ${((widget.habbit.timespent / (widget.habbit.timeGoal * 60)) * 100).toInt()}%",
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -425,6 +442,7 @@ class _HabbitTileState extends State<HabbitTile> {
                   height: WIDTH * 0.16,
                   width: WIDTH * 0.16,
                   child: Stack(alignment: Alignment.center, children: [
+                    //Visualize progress 
                     CircularPercentIndicator(
                       radius: (WIDTH * 0.06).toDouble(),
                       lineWidth: 4.0,
@@ -448,7 +466,7 @@ class _HabbitTileState extends State<HabbitTile> {
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-           
+                    //Showing ther reset button only if a habbit is started 
                     Visibility(
                       // ignore: sort_child_properties_last
                       child: IconButton(

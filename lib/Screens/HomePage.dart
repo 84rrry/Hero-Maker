@@ -6,7 +6,6 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habbits_tracker/Model/habbit.dart';
 import 'package:habbits_tracker/Components/Habbit%20Tile.dart';
@@ -17,8 +16,6 @@ import 'package:lottie/lottie.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../Hive Db/Boxes.dart';
-// import 'package:timezone/timezone.dart' as tz;
-// import 'package:timezone/data/latest.dart' as tz;
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -27,6 +24,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+//function to provide greetings
 String greeting() {
   var hour = DateTime.now().hour;
   if (hour < 12) {
@@ -41,15 +39,18 @@ String greeting() {
   return 'Peaceful Night';
 }
 
+//getting the current time
 DateTime now = DateTime.now();
 String formattedDate = DateFormat('EEE d MMM').format(now);
 
 class _HomePageState extends State<HomePage> {
+  //Text controller for habbit name
   TextEditingController habbitNameController = TextEditingController();
+  //Text controller for habbit time goal
   TextEditingController timeGoalController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  //List of used backgrounds
+  //List of used images backgrounds
   List<String> images = [
     'assets/Images/Background1.jpg',
     'assets/Images/Background2.jpg',
@@ -67,6 +68,8 @@ class _HomePageState extends State<HomePage> {
   late AssetImage currentImage;
   PaletteColor? currentPalette = PaletteColor(Colors.grey, 2);
   late Future<PaletteColor?> _future;
+
+  //function to choose a random image from the list of backgrounds
   AssetImage img() {
     int min = 0;
     int max = images.length - 1;
@@ -77,6 +80,7 @@ class _HomePageState extends State<HomePage> {
     return AssetImage(image_name);
   }
 
+//function to request permissions from the user
   Future<void> requestPermissons(BuildContext context) async {
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
@@ -120,6 +124,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+//Function  to extract a color from an image
   Future<PaletteColor?> _updatePalettes(image) async {
     await Future.delayed(Duration(seconds: 2));
     print('started palette');
@@ -135,6 +140,7 @@ class _HomePageState extends State<HomePage> {
             : PaletteColor(Colors.grey, 2));
   }
 
+//Function to play alarm when a habbit is completed
   void playAlarm() {
     FlutterRingtonePlayer.play(
       android: AndroidSounds.alarm,
@@ -144,10 +150,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+//Function to stop the alarm
   void stopAlarm() {
     FlutterRingtonePlayer.stop();
   }
 
+//Function to add a habbit
   Future? addHabbit(String habbitname, int goaltime) {
     final habbit = Habbit(
       habbitname,
@@ -167,11 +175,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    //loading random image
     currentImage = img();
-
+    //extracting dominant color
     _future = _updatePalettes(currentImage);
+    //listening for notifications
     AwesomeNotifications().createdStream.listen((notification) {
       playAlarm();
     });
@@ -182,17 +191,20 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
+    //precashing images to avoid freezing
     precacheImage(currentImage, context);
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
+    //fetshing the height of the device
     var HEIGHT = MediaQuery.of(context).size.height;
+    //fetshing the Width of the device
     var WIDTH = MediaQuery.of(context).size.width;
     return FutureBuilder(
       builder: (context, snapshot) {
+        //when connection complete
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
             return Center(
@@ -323,7 +335,9 @@ class _HomePageState extends State<HomePage> {
               floatingActionButton: FloatingActionButton(
                 backgroundColor: currentPalette!.color,
                 onPressed: () async {
+                  //asking for permissions
                   await requestPermissons(context);
+                  //dialogue box to provide information about the added habbit
                   showDialog(
                     context: context,
                     builder: (context) {
@@ -439,13 +453,14 @@ class _HomePageState extends State<HomePage> {
                                 TextButton(
                                   onPressed: () async {
                                     if (_formKey.currentState!.validate()) {
+                                      //showing a message to the user that ahabbit was created
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         const SnackBar(
                                           content: Text('Creating Habbit!'),
                                         ),
                                       );
-
+                                      //adding the habbit
                                       await addHabbit(habbitNameController.text,
                                           int.parse(timeGoalController.text));
 
@@ -462,6 +477,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                 ),
+                                //a button to close the alert dialogue 
                                 TextButton(
                                   onPressed: () {
                                     habbitNameController.clear();
