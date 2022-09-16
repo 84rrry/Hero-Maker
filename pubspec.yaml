@@ -48,8 +48,7 @@ dependencies:
   flutter_ringtone_player: ^3.2.0
   permission_handler: ^10.0.0
   awesome_notifications: ^0.6.21
-  simple_animations: ^4.2.0
-
+  image_picker: ^0.8.5+3
 
 
 dev_dependencies:

@@ -17,6 +17,9 @@ import 'package:palette_generator/palette_generator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../Hive Db/Boxes.dart';
 
+enum MenuItem{
+ changeBg,
+}
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
 
@@ -238,12 +241,7 @@ class _HomePageState extends State<HomePage> {
                         physics: BouncingScrollPhysics(),
                         slivers: [
                           SliverAppBar(
-                            actions: [
-                              IconButton(
-                                  onPressed: () =>
-                                      print(habbitList[0].habbitCompleted),
-                                  icon: Icon(Icons.print))
-                            ],
+                    
                             // Provide a title.
                             title: Text(
                               greeting(),

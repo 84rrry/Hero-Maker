@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:simple_animations/simple_animations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -46,22 +45,11 @@ class _SplashScreenState extends State<SplashScreen> {
               flex: 7,
             ),
             //Animating the logo
-            MirrorAnimation(
-              builder: (context, child, double value) {
-                return Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.identity()
-                    ..setEntry(3, 2, 0.001)
-                    ..rotateY(pi * value),
-                  child: Image.asset(
+          Image.asset(
                     'assets/Images/Hero_Maker_Logo.png',
-                    height: HEIGHT * 0.2,
+                    height: HEIGHT * 0.17,
                   ),
-                );
-              },
-              duration: const Duration(milliseconds: 1000),
-              tween: Tween<double>(begin: 0, end: 1),
-            ),
+          
             Spacer(
               flex: 6,
             ),
